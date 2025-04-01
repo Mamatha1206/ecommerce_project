@@ -10,16 +10,21 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git (url : 'https://github.com/Mamatha1206/ecommerce-project.git', branch:'main')
+                script {
+                    // Git checkout using Personal Access Token (PAT)
+                    git credentialsId: 'github-pat-credentials', url: 'https://github.com/Mamatha1206/ecommerce-project.git', branch: 'main'
+
+                    // If using SSH authentication, comment the above line and uncomment the line below:
+                    // git credentialsId: 'github-ssh-key', url: 'git@github.com:Mamatha1206/ecommerce-project.git', branch: 'main'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Navigate to the backend directory
                     dir('backend') {
-                        // Build the Docker image with the dynamic tag
+                        echo "Building Docker Image..."
                         sh "docker build -t ${REGISTRY}:${DOCKER_TAG} ."
                     }
                 }
@@ -29,9 +34,9 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Login to Docker Hub using Jenkins credentials
+                    echo "Logging into Docker Hub..."
                     withDockerRegistry(credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/') {
-                        // Push the image to Docker Hub
+                        echo "Pushing Docker Image to Docker Hub..."
                         sh "docker push ${REGISTRY}:${DOCKER_TAG}"
                     }
                 }
@@ -41,11 +46,11 @@ pipeline {
         stage('Deploy to Local Docker') {
             steps {
                 script {
-                    // Stop and remove the old container if it exists
+                    echo "Stopping existing container if it exists..."
                     sh "docker stop ecommerce || true"
                     sh "docker rm ecommerce || true"
-                    
-                    // Run a new container with the newly built image
+
+                    echo "Deploying new container..."
                     sh "docker run -d -p 5000:5000 --name ecommerce ${REGISTRY}:${DOCKER_TAG}"
                 }
             }
@@ -61,3 +66,4 @@ pipeline {
         }
     }
 }
+
