@@ -11,7 +11,8 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    git credentialsId: 'github-pat-credentials', url: 'https://github.com/Mamatha1206/ecommerce-project.git', branch: 'main'
+                    git credentialsId: 'github-pat-credentials', url: 'https://github.com/Mamatha1206/ecommerce_project.git', branch: 'main'
+
                 }
             }
         }
