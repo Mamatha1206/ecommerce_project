@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'my-ecommerce-backend'
+        DOCKER_IMAGE = 'ecommerce_project'
         DOCKER_TAG = "${BUILD_NUMBER}"
         REGISTRY = 'mamatha0124/my-ecommerce'
     }
@@ -56,3 +56,4 @@ pipeline {
         }
     }
 }
+
