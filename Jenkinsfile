@@ -12,7 +12,6 @@ pipeline {
             steps {
                 script {
                     git credentialsId: 'github-pat-credentials', url: 'https://github.com/Mamatha1206/ecommerce_project.git', branch: 'main'
-
                 }
             }
         }
@@ -20,8 +19,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dir('backend') {
-                        sh "docker build -t ${REGISTRY}:${DOCKER_TAG} ."
+                    sh "echo 'Current Workspace: ${WORKSPACE}'"
+                    sh "ls -l \"${WORKSPACE}\""
+
+                    dir('backend') {  // Navigate to the backend folder
+                        sh "docker build -t ${REGISTRY}:${DOCKER_TAG} -f Dockerfile ."
                     }
                 }
             }
