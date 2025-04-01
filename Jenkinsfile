@@ -19,12 +19,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "echo 'Current Workspace: ${WORKSPACE}'"
-                    sh "ls -l \"${WORKSPACE}\""
-
-                    dir('backend') {  // Navigate to the backend folder
-                        sh "docker build -t ${REGISTRY}:${DOCKER_TAG} -f Dockerfile ."
-                    }
+                    sh "echo 'Current Workspace: ' ${WORKSPACE}"
+                    sh "ls -l ${WORKSPACE}"  // Debugging: Check files
+                    sh "docker build -t ${REGISTRY}:${DOCKER_TAG} -f ${WORKSPACE}/Dockerfile ${WORKSPACE}" 
                 }
             }
         }
